@@ -13,7 +13,7 @@ import (
 const (
     NET_DIR string = "/sys/class/net"
     THEME_PATH string = "~/.config/themes/theme"
-    POLY_INFO_PATH string = "/tmp/polybar_info1"
+    POLY_INFO_PATH string = "/tmp/polybar_info"
 )
 var POWER_ICONS = map[string]string{
         "power":"","reboot":"","lock":"",
@@ -147,12 +147,12 @@ func main() {
     connectedScreens := setupScreens()
     //log.Printf("Interfaces:%s, %s, %s\nConnected screens:%v\ntheme\n%+v",lan1, lan2, wlan, connectedScreens, theme)
     type PolybarInfo struct{
-        ConnectedScreens map[int]map[string]string
-        PolybarWsFormats map[string]string
-        PolybarModuleSeparator string
+        ConnectedScreens map[string]map[string]string  `yaml:"screens"`
+        PolybarWsFormats map[string]string          `yaml:"formats"`
+        PolybarModuleSeparator string               `yaml:"separator"`
     }
     var polybarInfo PolybarInfo
-    connectedScreenMap := make(map[int]map[string]string)
+    connectedScreenMap := make(map[string]map[string]string)
     themeValues := reflect.ValueOf(theme)
     themeType := themeValues.Type()
     err = exec.Command("killall", "polybar").Run()
@@ -182,7 +182,8 @@ func main() {
         if err != nil {
             log.Fatalf("error while launching polybar\n%v",err)
         }
-        connectedScreenMap[i] = map[string]string{"name":screen,
+        screenIndex := strconv.Itoa(i)
+        connectedScreenMap[screenIndex] = map[string]string{"name":screen,
             "pid":strconv.Itoa(_cmd.Process.Pid)}
     }
     polybarInfo.ConnectedScreens = connectedScreenMap

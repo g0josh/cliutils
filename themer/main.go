@@ -14,7 +14,7 @@ const (
     AlacrittyConfPath = "~/.config/alacritty/alacritty.yml"
     XColorsPath = "/tmp/x_colors"
     ThemePath = "~/.config/themes/current.theme"
-    ParsedThemePath = "~/.config/themes/theme1"
+    ParsedThemePath = "~/.config/themes/theme"
 )
 var ColorMap = map[string]string {"*.foreground:":"foreground","*.background:":"background",
         "*.cursorColor:":"cursorColor","*.color0:":"black", "*.color8:":"bright_black",
