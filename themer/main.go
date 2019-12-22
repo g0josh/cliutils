@@ -39,7 +39,7 @@ func getTheme() (map[string]interface{}) {
     if err != nil {
         log.Fatalf("Error while opening theme file '%v'\n%v",themePath, err)
     }
-    var theme = map[string]string{}
+    var theme = make(map[string]interface{})
     err = yaml.Unmarshal(yamlFh, &theme)
     if err != nil {
         log.Fatalf("Error while Unmarshaling yaml file '%v'\n%v",themePath, err)
@@ -47,7 +47,7 @@ func getTheme() (map[string]interface{}) {
 
     // get x colors and convert 
     // to human readable color keys
-    colors := strings.Fields(theme["terminal_colors"])
+    colors := strings.Fields(theme["terminal_colors"].(string))
     terminalColors := map[string]string{}
     xColors := ""
     for i:=0; i<len(colors); i+=2 {
@@ -77,11 +77,15 @@ func getTheme() (map[string]interface{}) {
         if k == "terminal_colors" {
             continue
         }
-        if colorCode, ok := terminalColors[v]; ok{
-            correctedTheme[k] = colorCode
-        }else{
-            correctedTheme[k] = v
+        strValue, ok := v.(string)
+        if ok {
+            if colorCode, ok := terminalColors[strValue]; ok{
+                correctedTheme[k] = colorCode
+                continue
+            }
+            continue
         }
+        correctedTheme[k] = v
     }
     return correctedTheme
 }
