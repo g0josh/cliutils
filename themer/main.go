@@ -83,7 +83,6 @@ func getTheme() (map[string]interface{}) {
                 correctedTheme[k] = colorCode
                 continue
             }
-            continue
         }
         correctedTheme[k] = v
     }
